@@ -1,6 +1,9 @@
-from pycat.core import Window , Sprite, KeyCode, Scheduler, Point
+from pycat.core import Window , Sprite, KeyCode, Scheduler, Point, Label, Color
 
 windows = Window(background_image='grass.jpg')
+
+team1 = 0
+team2 = 0
 
 class point1(Sprite):
     def on_create(self):
@@ -88,37 +91,101 @@ windows.create_sprite(point12)
 #mid top = 11
 #mid bottom = 12
 
+class team1_label (Label):
+    def on_create(self):
+        self.position = Point(300,400 )
+        self.color = Color.WHITE
+        self.text = "Score:0"
+
+    def on_update(self, dt):
+        global team1
+        self.text = "Score:" + str(team1)
+
+class team2_label (Label):
+    def on_create(self):
+        self.position = Point(300,880)
+        self.color = Color.WHITE
+        self.text = "Score:0"
+
+    def on_update(self, dt):
+        global team2
+        self.text = "Score:" + str(team2)
+windows.create_label(team2_label)
+
+class token1 (Sprite):
+    def on_create(self):
+        self.image = 'Token.png'
+        self.position = Point(640,450)
+        self.scale = 0.05
+
+    def on_update(self, dt):
+        global team1
+        global team2
+        if self.is_touching_any_sprite_with_tag('team1'):
+            team1 += 1
+            self.delete()
+        if self.is_touching_any_sprite_with_tag('team2'):
+            team2 += 1
+            self.delete()
+
+windows.create_label(team1_label)
+
+
+class token2 (Sprite):
+    def on_create(self):
+        self.image = 'Token.png'
+        self.position = Point(640,190)
+        self.scale = 0.05
+
+    def on_update(self, dt):
+        global team1
+        global team2
+        if self.is_touching_any_sprite_with_tag('team1'):
+            team1 += 1
+            self.delete()
+        if self.is_touching_any_sprite_with_tag('team2'):
+            team2 += 1
+            self.delete()
+
+windows.create_sprite(token1)
+windows.create_sprite(token2)
+
 class ally1p1 (Sprite):
     def on_create(self):
         self.image = 'ally1.png'
         self.position = Point(100, 200)
         self.scale = 0.3
+        point2_collect = ""
+        self.add_tag('team1')
 
     def on_update(self, dt):
         if not self.y == 90:
             self.y -= 5
-        if self.y == 90:
-            point2_collect = "p1"
-        if point2_collect == "p1" and not self.x == 5:
-            self.x += 5
+        # if self.y == 90:
+        #     point2_collect = "p1"
+        # if point2_collect == "p1" and not self.x == 5:
+        #     self.x += 5
 
 class ally2p1 (Sprite):
     def on_create(self):
         self.image = 'enemy1.png'
         self.position = Point(1180, 200)
         self.scale = 0.3
+        self.add_tag('team2')
 
 class ally1p2 (Sprite):
     def on_create(self):
         self.image = 'ally2.png'
         self.position = Point(100, 440)
         self.scale = 0.3
+        self.add_tag('team1')
 
 class ally2p2 (Sprite):
     def on_create(self):
         self.image = 'enemy2.png'
         self.position = Point(1180, 440)
         self.scale = 0.3
+        self.add_tag('team2')
 
 
 class player1 (Sprite):
@@ -126,6 +193,7 @@ class player1 (Sprite):
         self.image = 'p1.png'
         self.position = Point(100, 320)
         self.scale = 0.3
+        self.add_tag('team1')
 
     def on_update(self, dt):
         self.prev_x = self.x
@@ -147,9 +215,10 @@ class player1 (Sprite):
 
 class player2 (Sprite):
     def on_create(self):
-        self.image = 'p2.png'
+        self.image = 'p2-1.png'
         self.position = Point(1180, 320)
         self.scale = 0.3
+        self.add_tag('team2')
 
     def on_update(self, dt):
         self.prev_x = self.x
