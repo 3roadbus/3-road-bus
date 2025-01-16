@@ -123,10 +123,14 @@ class token1 (Sprite):
         global team2
         if self.is_touching_any_sprite_with_tag('team1'):
             team1 += 1
+            dt = 0
             self.delete()
         if self.is_touching_any_sprite_with_tag('team2'):
             team2 += 1
+            dt = 0
             self.delete()
+        if dt == 5:
+            windows.create_sprite(token1)
 
 windows.create_label(team1_label)
 
@@ -142,10 +146,15 @@ class token2 (Sprite):
         global team2
         if self.is_touching_any_sprite_with_tag('team1'):
             team1 += 1
+            dt = 0
             self.delete()
         if self.is_touching_any_sprite_with_tag('team2'):
             team2 += 1
+            Vdt = 0
             self.delete()
+        if dt == 5:
+            windows.create_sprite(token1)
+
 
 windows.create_sprite(token1)
 windows.create_sprite(token2)
@@ -204,14 +213,14 @@ class player1 (Sprite):
         if self.window.is_key_pressed(KeyCode.S):
             self.y -= 3
         if self.window.is_key_pressed(KeyCode.A):
-            self.x -= 3
+            self.direction -= 1
         if self.window.is_key_pressed(KeyCode.D):
-            self.x += 3
+            self.direction += 1
         if self.is_touching_any_sprite_with_tag('wall'):
             self.x = self.prev_x
             self.y = self.prev_y
-
-
+        if self.window.is_key_pressed(Keycode.1):
+            
 
 class player2 (Sprite):
     def on_create(self):
@@ -229,9 +238,9 @@ class player2 (Sprite):
         if self.window.is_key_pressed(KeyCode.K):
             self.y -= 3
         if self.window.is_key_pressed(KeyCode.J):
-            self.x -= 3
+            self.direction -= 1
         if self.window.is_key_pressed(KeyCode.L):
-            self.x += 3
+            self.direction += 1
         if self.is_touching_any_sprite_with_tag('wall'):
             self.x = self.prev_x
             self.y = self.prev_y
