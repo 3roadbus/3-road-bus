@@ -91,6 +91,11 @@ windows.create_sprite(point12)
 #mid top = 11
 #mid bottom = 12
 
+class bullet(Sprite):
+    def on_update(self):
+        self.image = '.png'
+        
+
 class team1_label (Label):
     def on_create(self):
         self.position = Point(300,400 )
