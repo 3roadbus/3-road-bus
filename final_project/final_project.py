@@ -1,4 +1,4 @@
-from pycat.core import Window , Sprite, KeyCode, Scheduler, Point, Label, Color
+.from pycat.core import Window , Sprite, KeyCode, Scheduler, Point, Label, Color
 
 windows = Window(background_image='grass.jpg')
 
@@ -94,7 +94,15 @@ windows.create_sprite(point12)
 class bullet(Sprite):
     def on_update(self):
         self.image = '.png'
-        
+        if self.window.is_key_pressed(Keycode, 1)；
+            self.point_toward_sprite(player2)
+        if self.window.is_key_pressed(Keycode, 0):
+            self.point_toward_sprite(player1)
+
+    def on_update(self, dt):
+        self.move_forward(7)
+        if self.is_touching_any_sprite_with_tag('wall'):
+                self.delete()
 
 class team1_label (Label):
     def on_create(self):
