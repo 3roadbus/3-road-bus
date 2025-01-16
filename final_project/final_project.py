@@ -181,6 +181,7 @@ class ally1p1 (Sprite):
         self.scale = 0.3
         point2_collect = ""
         self.add_tag('team1')
+        self.scheuler
 
     def on_update(self, dt):
         if not self.y == 90:
