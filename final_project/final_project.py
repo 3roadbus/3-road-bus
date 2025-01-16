@@ -117,19 +117,20 @@ class token1 (Sprite):
         self.image = 'Token.png'
         self.position = Point(640,450)
         self.scale = 0.05
-
+        self.timer = 0
+        
     def on_update(self, dt):
         global team1
         global team2
         if self.is_touching_any_sprite_with_tag('team1'):
             team1 += 1
-            dt = 0
+            self.timer= 0
             self.delete()
         if self.is_touching_any_sprite_with_tag('team2'):
             team2 += 1
-            dt = 0
+            self.timer = 0
             self.delete()
-        if dt == 5:
+        if self.timer == 5:
             windows.create_sprite(token1)
 
 windows.create_label(team1_label)
@@ -140,19 +141,20 @@ class token2 (Sprite):
         self.image = 'Token.png'
         self.position = Point(640,190)
         self.scale = 0.05
-
+        self.timer = 0
+    
     def on_update(self, dt):
         global team1
         global team2
         if self.is_touching_any_sprite_with_tag('team1'):
             team1 += 1
-            dt = 0
+            self.timer = 0
             self.delete()
         if self.is_touching_any_sprite_with_tag('team2'):
             team2 += 1
-            Vdt = 0
+            self.timer = 0
             self.delete()
-        if dt == 5:
+        if dtself.timer == 5:
             windows.create_sprite(token1)
 
 
