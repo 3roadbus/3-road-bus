@@ -91,7 +91,31 @@ windows.create_sprite(point12)
 #mid top = 11
 #mid bottom = 12
 
-class bullet(Sprite):
+class timing(Label):
+    def on_create(self):
+        self.position = Point(640,320 )
+        self.color = Color.RED
+        self.text = "Timing:60"
+
+    def on_update(self,dt):
+        self.text = "Timing:" + str( 60 - str(dt))
+        if dt == 60:
+            window.delete()
+
+class bullet1(Sprite):
+    def on_update(self):
+        self.image = '.png'
+        if self.window.is_key_pressed(Keycode, 1)；
+            self.point_toward_sprite(player2)
+        if self.window.is_key_pressed(Keycode, 0):
+            self.point_toward_sprite(player1)
+
+    def on_update(self, dt):
+        self.move_forward(7)
+        if self.is_touching_any_sprite_with_tag('wall'):
+                self.delete()
+
+class bullet2(Sprite):
     def on_update(self):
         self.image = '.png'
         if self.window.is_key_pressed(Keycode, 1)；
@@ -182,6 +206,8 @@ class ally1p1 (Sprite):
         point2_collect = ""
         self.add_tag('team1')
         Scheduler.update(self.shoot, 3)
+    def shoot(self):
+        windows.create_sprite(bullet)
 
     def on_update(self, dt):
         if not self.y == 90:
@@ -197,6 +223,9 @@ class ally2p1 (Sprite):
         self.position = Point(1180, 200)
         self.scale = 0.3
         self.add_tag('team2')
+        Scheduler.update(self.shoot, 3)
+    def shoot(self):
+        windows.create_sprite(bullet)
 
 class ally1p2 (Sprite):
     def on_create(self):
@@ -204,6 +233,9 @@ class ally1p2 (Sprite):
         self.position = Point(100, 440)
         self.scale = 0.3
         self.add_tag('team1')
+        Scheduler.update(self.shoot, 3)
+    def shoot(self):
+        windows.create_sprite(bullet)
 
 class ally2p2 (Sprite):
     def on_create(self):
@@ -211,7 +243,9 @@ class ally2p2 (Sprite):
         self.position = Point(1180, 440)
         self.scale = 0.3
         self.add_tag('team2')
-
+        Scheduler.update(self.shoot, 3)
+    def shoot(self):
+        windows.create_sprite(bullet)
 
 class player1 (Sprite):
     def on_create(self):
