@@ -104,11 +104,10 @@ class timing(Label):
 
 class bullet1(Sprite):
     def on_update(self):
-        self.image = '.png'
+        self.image = 'bulllet.png'
         if self.window.is_key_pressed(Keycode, 1)；
             self.point_toward_sprite(player2)
-        if self.window.is_key_pressed(Keycode, 0):
-            self.point_toward_sprite(player1)
+            windows.create_sprite(bullet1)
 
     def on_update(self, dt):
         self.move_forward(7)
@@ -117,11 +116,10 @@ class bullet1(Sprite):
 
 class bullet2(Sprite):
     def on_update(self):
-        self.image = '.png'
-        if self.window.is_key_pressed(Keycode, 1)；
-            self.point_toward_sprite(player2)
+        self.image = 'bulllet.png'
         if self.window.is_key_pressed(Keycode, 0):
             self.point_toward_sprite(player1)
+            windows.create_sprite(bullet2)
 
     def on_update(self, dt):
         self.move_forward(7)
@@ -206,16 +204,16 @@ class ally1p1 (Sprite):
         point2_collect = ""
         self.add_tag('team1')
         Scheduler.update(self.shoot, 3)
+        if self.touching_any_sprite(bullet2):
+            self.position = Point(100, 200)
     def shoot(self):
-        windows.create_sprite(bullet)
+        windows.create_sprite(bullet1)
 
     def on_update(self, dt):
         if not self.y == 90:
             self.y -= 5
-        # if self.y == 90:
-        #     point2_collect = "p1"
-        # if point2_collect == "p1" and not self.x == 5:
-        #     self.x += 5
+        if self.y == 90 and not self.x == 480:
+            self.x += 5
 
 class ally2p1 (Sprite):
     def on_create(self):
@@ -224,8 +222,16 @@ class ally2p1 (Sprite):
         self.scale = 0.3
         self.add_tag('team2')
         Scheduler.update(self.shoot, 3)
+        if self.touching_any_sprite(bullet1):
+            self.position = Point(1180, 200)
     def shoot(self):
-        windows.create_sprite(bullet)
+        windows.create_sprite(bullet2)
+
+    def on_update(self, dt):
+        if not self.y == 90:
+            self.y -= 5
+        if self.y == 90 and not self.x == 800:
+            self.x += 5
 
 class ally1p2 (Sprite):
     def on_create(self):
@@ -234,8 +240,16 @@ class ally1p2 (Sprite):
         self.scale = 0.3
         self.add_tag('team1')
         Scheduler.update(self.shoot, 3)
+        if self.touching_any_sprite(bullet2):
+            self.position = Point(100, 400)
     def shoot(self):
-        windows.create_sprite(bullet)
+        windows.create_sprite(bullet1)
+        
+     def on_update(self, dt):
+        if not self.y == 550:
+            self.y -= 5
+        if self.y == 550 and not self.x == 480:
+            self.x += 5
 
 class ally2p2 (Sprite):
     def on_create(self):
@@ -244,8 +258,16 @@ class ally2p2 (Sprite):
         self.scale = 0.3
         self.add_tag('team2')
         Scheduler.update(self.shoot, 3)
+        if self.touching_any_sprite(bullet1):
+            self.position = Point(1180, 440)
     def shoot(self):
-        windows.create_sprite(bullet)
+        windows.create_sprite(bullet2)
+
+    def on_update(self, dt):
+        if not self.y == 550:
+            self.y -= 5
+        if self.y == 550 and not self.x == 800:
+            self.x += 5
 
 class player1 (Sprite):
     def on_create(self):
@@ -253,6 +275,8 @@ class player1 (Sprite):
         self.position = Point(100, 320)
         self.scale = 0.3
         self.add_tag('team1')
+        if self.touching_any_sprite(bullet2):
+            self.position = Point(100, 320)
 
     def on_update(self, dt):
         self.prev_x = self.x
@@ -278,6 +302,8 @@ class player2 (Sprite):
         self.position = Point(1180, 320)
         self.scale = 0.3
         self.add_tag('team2')
+        if self.touching_any_sprite(bullet1):
+            self.position = Point(1180, 320)
 
     def on_update(self, dt):
         self.prev_x = self.x
