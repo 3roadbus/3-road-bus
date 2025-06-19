@@ -64,7 +64,7 @@ def create_question():
     correct = answers[current_index]
     choices = [correct]
     while len(choices) < 3:
-        wrong = str(int(correct) + random.randint(-10, 10))
+        wrong = str(int(correct) + random.randint(-100, 100))
         if wrong != correct and wrong not in choices:
             choices.append(wrong)
     random.shuffle(choices)
