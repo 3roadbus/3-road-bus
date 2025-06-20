@@ -8,24 +8,32 @@ hitblock_move = [Point(1080,440),
                  Point(1080,200)
                                 ]
 #1080, 440
-Easy_math = []
-Easy_ans = []
-class question_label (Label):
+score = 0
+question = []
+Answer = []
+class Question_label(Label):
     def on_create(self):
-        index_qst = 0
-        self.text = Easy_math(index_qst)
-        self.font_size = 150
-        #self.position = Point(640,320)
+        self.font_size = 50
+        self.position = Point(640, 500)
+        self.text = ""
+
+class FeedbackLabel(Label):
+    def on_create(self):
+        self.font_size = 45
+        self.position = Point(640, 400)
+        self.text = ""
+
 class title (Label):
     def on_create(self):
         self.text = "Mathing to Winning!"
         self.font_size = 110
         self.position = Point(20,500)
         self.rotation = 90
-        if not Screen_change == 1:
-            self.delete()
+
 
     def on_update(self, dt):
+        if not Screen_change == 1:
+            self.delete()
         self.rotation += 20
 class fly_dec (Sprite):
     def on_create(self):
@@ -82,18 +90,10 @@ class Easy(Sprite):
         self.position = Point(320, 480)
     
     def on_left_click(self):
-        global Screen_change
-        Screen_change = 3
-        for _ in range(5):
-            first_num = random.randint(1,100)
-            sec_num = random.randint(1,100)
-            Easy_math.append(str(first_num) + "+" + str(sec_num) + "?")
-            Easy_ans.append( str(first_num + sec_num))
-            print(Easy_ans)
-    
-    def on_update(self, dt):
-        if not Screen_change == 2:
-            self.delete()
+        # if not Screen_change == 2:
+        #     Screen_change = 3
+        self.delete()
+        start_quiz("easy")
 
 class Mid(Sprite):
     def on_create(self):
@@ -101,9 +101,9 @@ class Mid(Sprite):
         self.scale = 4
         self.position = Point(640, 480)
     
-    def on_update(self, dt):
-        if not Screen_change == 2:
+    def on_left_click(self):
             self.delete()
+            start_quiz("Medium")
 
     def on_left_click(self):
         global Screen_change
@@ -119,9 +119,11 @@ class Hard(Sprite):
         global Screen_change
         Screen_change = 3
 
-    def on_update(self, dt):
+    def on_left_click(self):
         if not Screen_change == 2:
+            Screen_change = 3
             self.delete()
+        start_quiz("Hard")
 
 class EX(Sprite):
     def on_create(self):
@@ -129,27 +131,11 @@ class EX(Sprite):
         self.scale = 4
         self.position = Point(320, 160)
     
-    def on_left_click(self):
-        global Screen_change
-        Screen_change = 3
-
-    def on_update(self, dt):
+def on_left_click(self):
         if not Screen_change == 2:
+            Screen_change = 3
             self.delete()
-
-class devil(Sprite):
-    def on_create(self):
-        self.image = 'devil.png'
-        self.scale = 4
-        self.position = Point(960, 160)
-    
-    def on_left_click(self):
-        global Screen_change
-        Screen_change = 3
-
-    def on_update(self, dt):
-        if not Screen_change == 2:
-            self.delete()
+        start_quiz("EX")
 
 class play(Sprite):
     def on_create(self):
@@ -161,25 +147,69 @@ class play(Sprite):
         global Screen_change
         Screen_change = 2
         windows.create_sprite(Easy)
+        windows.create_sprite(Mid)
+        windows.create_sprite(Hard)
+        windows.create_sprite(EX)
         if not Screen_change == 1:
             self.delete()
+        
 windows.create_sprite(ftcc)
 for _ in range(20):
     windows.create_sprite(fly_dec)
 
     # if Screen_change == 1:
-        
+
+def start_quiz(difficulty):
+    global question, Answer,score, question_label, feedback_label
+    question.clear()
+    Answer.clear()
+    score = 0
+
+    for _ in range(5):
+        if difficulty == "easy":
+            a = random.randint(1, 25)
+            b = random.randint(1, 25)
+            question.append(f"{a} + {b}")
+            Answer.append(str(a + b))
+        elif difficulty == "medium":
+            a = random.randint(20, 25)
+            b = random.randint(1, 25)
+            question.append(f"{a} - {b}")
+            Answer.append(str(a - b))
+        elif difficulty == "hard":
+            a = random.randint(1, 25)
+            b = random.randint(1, 25)
+            question.append(f"{a} × {b}")
+            Answer.append(str(a * b))
+        elif difficulty == "EX":
+            a = random.randint(1, 25)
+            b = random.randint(1, 25)* a
+            question.append(f"{b} ÷ {a}")
+            Answer.append(str(a / b))
+
+
+    feedback_label = windows.create_label(FeedbackLabel)
+    question_label = windows.create_label(Question_label)
+    run_quiz()
+
+def run_quiz():
+    global score
+    for i in range(5):
+        q = question[i]
+        question_label.text = f"Q{i+1}: {q} = ?"
+        feedback_label.text = ""
+
+        user_input = input(f"{q} = ")
+        if user_input.strip() == Answer[i]:
+            feedback_label.text = "✅ Correct!"
+            score += 1
+        else:
+            feedback_label.text = f"❌ Wrong! Correct: {Answer[i]}"
+
+    question_label.text = "Quiz Finished!"
+    feedback_label.text = f"Your Score: {score}/5"
+
 windows.create_label(title)
 windows.create_sprite(play)
-
-
-# difficulty choosing part
-
-    #windows.create_sprite(devil)
-    #windows.create_sprite(EX)
-    #windows.create_sprite(Hard)
-    #windows.create_sprite(Mid)
-    
-    #windows.create_sprite(Random)
 
 windows.run()
