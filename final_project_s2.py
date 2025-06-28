@@ -7,7 +7,8 @@ hitblock_move = [Point(1080,440),
                  Point(200,200),
                  Point(1080,200)
                                 ]
-#1080, 440
+
+showing= True
 score = 0
 question = []
 Answer = []
@@ -29,7 +30,6 @@ class title (Label):
         self.font_size = 110
         self.position = Point(20,500)
         self.rotation = 90
-
 
     def on_update(self, dt):
         if not Screen_change == 1:
@@ -85,58 +85,74 @@ class ftcc(Sprite):
                 self.delete()
 class Easy(Sprite):
     def on_create(self):
+        self.time = 0
         self.image = 'easy.png'
         self.scale = 4
         self.position = Point(320, 480)
     
     def on_left_click(self):
-        # if not Screen_change == 2:
-        #     Screen_change = 3
-        self.delete()
+        global showing
+        showing = False
+        self.time= 0
         start_quiz("easy")
 
+    def on_update(self, dt):
+        if showing == False:
+            self.opacity = 0.1
+            
 class Mid(Sprite):
     def on_create(self):
         self.image = 'med.png'
         self.scale = 4
         self.position = Point(640, 480)
+        self.time = 0
     
     def on_left_click(self):
-            self.delete()
-            start_quiz("Medium")
+        global showing
+        showing = False
+        self.time= 0
+        start_quiz("medium")
 
-    def on_left_click(self):
-        global Screen_change
-        Screen_change = 3
+    def on_update(self, dt):
+        if showing == False:
+            self.opacity = 0.1
+            
 
 class Hard(Sprite):
     def on_create(self):
         self.image = 'hard.png'
         self.scale = 4
         self.position = Point(960, 480)
+        self.time = 0
     
     def on_left_click(self):
-        global Screen_change
-        Screen_change = 3
+        global showing
+        showing = False
+        self.time= 0
+        start_quiz("hard")
 
-    def on_left_click(self):
-        if not Screen_change == 2:
-            Screen_change = 3
-            self.delete()
-        start_quiz("Hard")
+    def on_update(self, dt):
+        if showing == False:
+            self.opacity = 0.1
+            
 
 class EX(Sprite):
     def on_create(self):
         self.image = 'ex.png'
         self.scale = 4
         self.position = Point(320, 160)
+        self.time = 0
     
-def on_left_click(self):
-        if not Screen_change == 2:
-            Screen_change = 3
-            self.delete()
+    def on_left_click(self):
+        global showing
+        showing = False
+        self.time= 0
         start_quiz("EX")
 
+    def on_update(self, dt):
+        if showing == False:
+            self.opacity = 0.1
+            
 class play(Sprite):
     def on_create(self):
         self.scale = 3
@@ -179,14 +195,13 @@ def start_quiz(difficulty):
         elif difficulty == "hard":
             a = random.randint(1, 25)
             b = random.randint(1, 25)
-            question.append(f"{a} × {b}")
+            question.append(f"{a} x {b}")
             Answer.append(str(a * b))
         elif difficulty == "EX":
             a = random.randint(1, 25)
             b = random.randint(1, 25)* a
             question.append(f"{b} ÷ {a}")
-            Answer.append(str(a / b))
-
+            Answer.append(str(b / a))
 
     feedback_label = windows.create_label(FeedbackLabel)
     question_label = windows.create_label(Question_label)
