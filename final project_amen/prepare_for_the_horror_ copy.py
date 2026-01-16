@@ -1,28 +1,48 @@
 from pycat.core import Window, Sprite, KeyCode, RotationMode, Scheduler
 
 CELL = 64
-
+mode = 'menu'
 VIEW_W = 5          
 VIEW_H = 5          
 window = Window(width=VIEW_W * CELL, height=VIEW_H * CELL)
 
-cool_map = [
-    ["w","w","w","w","w","w","w","w"],
-    ["w","w","w","w","","","","w"],
-    ["w","","bu","w","bo","bo","","w"],
-    ["w","","","","p","d","","w"],
-    ["w","","w","","","w","","w"],
-    ["w","","w","","","g","","w"],
-    ["w","g","w","w","","","","w"],
-    ["w","w","w","w","w","w","w","w"]
-]
-cool_map = list(reversed(cool_map))
+window.background_image='bgim.png'
 
-MAP_H = len(cool_map)
-MAP_W = len(cool_map[0])
+class play(Sprite):
+    def on_create(self):
+        self.image = 'play.png'
+        self.x = 150
+        self.y = 120
+        self.scale = 1.2
+        
+    def on_click(self, mouse_event):
+        global mode  
+        mode = "game"
 
-CENTER_SX = (VIEW_W // 2) * CELL + CELL / 2
-CENTER_SY = (VIEW_H // 2) * CELL + CELL / 2
+    def on_update(self, dt):
+        global mode
+        if not mode =="menu":
+            if mode=="game":
+                calling_gm_gaming()
+            self.delete()
+
+class tuto(Sprite):
+    def on_create(self):
+        self.image = 'tutorial.png'
+        self.x = 150
+        self.y = 65
+        self.scale = 1.2   
+
+    def on_click(self, mouse_event):
+        global mode  
+        mode = "tutorial"
+
+    def on_update(self, dt):
+        global mode
+        if not mode =="menu":
+            if mode=="tutorial":
+                pass
+            self.delete()
 
 class Floor(Sprite):
     def on_create(self):
@@ -105,26 +125,46 @@ buttons = set()
 doors = set()
 walls = set()
 
-for y in range(MAP_H):
-    for x in range(MAP_W):
-        t = cool_map[y][x]
-        if "w" in t:
-            walls.add((x, y))
-        if "g" in t:
-            goals.add((x, y))
-        if "bu" in t:
-            buttons.add((x, y))
-        if "d" in t:
-            doors.add((x, y))
-        if "bo" in t:
-            boxes.add((x, y))
-        if "p" in t:
-            player_gx, player_gy = x, y
+def making_a_horrible_map():
+    global MAP_H , MAP_W , CENTER_SX , CENTER_SY , player_gx , player_gy , player_sprite
+    cool_map = [
+        ["w","w","w","w","w","w","w","w"],
+        ["w","w","w","w","","","","w"],
+        ["w","","bu","w","bo","bo","","w"],
+        ["w","","","","p","d","","w"],
+        ["w","","w","","","w","","w"],
+        ["w","","w","","","g","","w"],
+        ["w","g","w","w","","","","w"],
+        ["w","w","w","w","w","w","w","w"]
+    ]
+    cool_map = list(reversed(cool_map))
 
-if player_gx is None:
-    player_gx, player_gy = 1, 1
+    MAP_H = len(cool_map)
+    MAP_W = len(cool_map[0])
 
-player_sprite = window.create_sprite(Player, x=CENTER_SX, y=CENTER_SY)
+    CENTER_SX = (VIEW_W // 2) * CELL + CELL / 2
+    CENTER_SY = (VIEW_H // 2) * CELL + CELL / 2
+
+    for y in range(MAP_H):
+        for x in range(MAP_W):
+            t = cool_map[y][x]
+            if "w" in t:
+                walls.add((x, y))
+            if "g" in t:
+                goals.add((x, y))
+            if "bu" in t:
+                buttons.add((x, y))
+            if "d" in t:
+                doors.add((x, y))
+            if "bo" in t:
+                boxes.add((x, y))
+            if "p" in t:
+                player_gx, player_gy = x, y
+
+    if player_gx is None:
+        player_gx, player_gy = 1, 1
+
+    player_sprite = window.create_sprite(Player, x=CENTER_SX, y=CENTER_SY)
 
 rendered_sprites = []
 
@@ -227,6 +267,16 @@ def try_move(dx, dy):
     render()
     check_win()
 
-render()
+#below here is the code list of every gamemode
+
+def calling_gm_gaming():
+    render()
+    making_a_horrible_map()
+
+def calling_gm_menu():
+    window.create_sprite(play)
+    window.create_sprite(tuto)
+
+calling_gm_menu()
 
 window.run()
