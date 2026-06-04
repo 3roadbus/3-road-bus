@@ -37,6 +37,7 @@ class floor(Sprite):
         self.scale=2
         self.x= 1280
         self.color=Color(random.randint(1,255),random.randint(1,255),random.randint(1,255))
+        self.close= False
 
     def the_building_respawn(self):
         for i in range(random.randint(1,5)):
@@ -45,7 +46,8 @@ class floor(Sprite):
 
     def on_update(self, dt):
         global speed
-        if self.x<25:
+        if self.x<25 and self.close== False:
+            self.close=True
             self.the_building_respawn()
         else:
             self.x-=speed
