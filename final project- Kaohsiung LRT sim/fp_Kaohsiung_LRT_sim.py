@@ -69,7 +69,6 @@ class test_text(Label):
         global speed
         self.text= str(round(speed))
 
-#opening_of_buildings()
 windows.create_label(test_text)
 windows.create_sprite(tram_for_drive)
 windows.run()
