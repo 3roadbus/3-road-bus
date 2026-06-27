@@ -1,9 +1,14 @@
 from pycat.core import Window, Sprite, Color, KeyCode,Label,Scheduler,Player
-import random, pyglet
+import random,pyglet
+
+from pathlib import Path
 
 station_name =[
     "籬仔內","凱旋瑞田","前鎮之星","凱旋中華","夢時代","經貿園區","軟體園區","高雄展覽館","旅運中心","光榮碼頭","真愛碼頭","駁二大義","駁二蓬萊","哈瑪星","壽山公園","文武聖殿","鼓山區公所","鼓山","馬卡道","臺鐵美術館","內惟藝術中心","美術館","聯合醫院","龍華國小","愛河之心","新上國小","大順民族","灣仔內","高雄高工","樹德家商","科工館","聖功醫院","凱旋公園","衛生局","五權國小","凱旋武昌","凱旋二聖","輕軌機廠"
 ]
+
+FONT_PATH ='highway.ttf'
+pyglet.font.add_file(str(FONT_PATH))
 
 station_length=57
 lap_lock = False
@@ -21,8 +26,6 @@ is_door_close = True
 go_to_the_next_stop = False
 Money = 0
 change_stop = False
-
-pyglet.font.add_file('highway.ttf')
 
 window = Window(width=SCREEN_W, height=SCREEN_H,enforce_window_limits=False, background_image='bk.png')
 
@@ -138,7 +141,7 @@ class station(Sprite):
             if status =='arrive':
                 Money -= 50
                 status = 'way'
-                distance =500
+                distance = random.randint(250,1000)
             change_stop = True
             self.delete()
 
@@ -147,7 +150,7 @@ class station_name_t(Label):
         global station_name
         self.position= (1560,1260)
         self.color= Color.WHITE
-        self.text = station_name[0]
+        self.label = station_name[0]
         self.layer=12
         self.font_size = 40
         self.i = 0
@@ -160,7 +163,7 @@ class station_name_t(Label):
             else:
                 self.i = 0
             change_stop = False
-        self.text = station_name[i]
+        self.text = station_name[self.i]
             
 
 window.create_label(station_name_t)
@@ -338,17 +341,18 @@ class tram_hitbox(Sprite):
         self.y=430
         self.layer = 4
         self.scale =10
-        #self.opacity= 250
+        self.opacity= 10
         self.color = Color.RED
 
 #684.5
 class station_hitbox(Sprite):
     def on_create(self):
         self.y=430
-        #self.opacity= 250
+        self.opacity= 10
         self.scale =10
         self.layer = 4
         self.color = Color.BLUE
+
     def on_update(self, dt):
         global follow_station,Station
         if follow_station:
@@ -488,6 +492,5 @@ window.create_label(_test)
 window.create_sprite(tram_hitbox)
 window.create_sprite(TramForDrive)
 window.create_sprite(tram_from_the_other_side)
-window.create_label(station_name_t)
 
 window.run()
