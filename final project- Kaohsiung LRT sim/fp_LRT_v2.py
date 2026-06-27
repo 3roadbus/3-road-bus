@@ -1,14 +1,21 @@
 from pycat.core import Window, Sprite, Color, KeyCode,Label,Scheduler,Player
 import random,pyglet
-
+import os
 from pathlib import Path
 
 station_name =[
     "籬仔內","凱旋瑞田","前鎮之星","凱旋中華","夢時代","經貿園區","軟體園區","高雄展覽館","旅運中心","光榮碼頭","真愛碼頭","駁二大義","駁二蓬萊","哈瑪星","壽山公園","文武聖殿","鼓山區公所","鼓山","馬卡道","臺鐵美術館","內惟藝術中心","美術館","聯合醫院","龍華國小","愛河之心","新上國小","大順民族","灣仔內","高雄高工","樹德家商","科工館","聖功醫院","凱旋公園","衛生局","五權國小","凱旋武昌","凱旋二聖","輕軌機廠"
 ]
 
-FONT_PATH ='highway.ttf'
-pyglet.font.add_file(str(FONT_PATH))
+info = ['Please continue your way to the next station',
+        'Please slow your speed and stop perfectly',
+        'Please press the door button to transfer passengers']
+
+current_dir = os.path.dirname(__file__)
+font_path = os.path.join(current_dir,'highway.ttf')
+
+#FONT_PATH = Path(file).parent / 'highway.ttf'
+pyglet.font.add_file(str(font_path))
 
 station_length=57
 lap_lock = False
@@ -24,8 +31,11 @@ button_layer = 11
 button_y = 307
 is_door_close = True
 go_to_the_next_stop = False
+go_to_the_next_stop_= False
 Money = 0
 change_stop = False
+starter_y = 0
+ready = False
 
 window = Window(width=SCREEN_W, height=SCREEN_H,enforce_window_limits=False, background_image='bk.png')
 
@@ -41,6 +51,63 @@ def playing_music():
 
 playing_music()
 Scheduler.update(playing_music,313)
+
+class play_bt(Sprite):
+    def on_create(self):
+        self.image = 'playin.png'
+        self.layer = 21
+        self.scale = 1
+        self.x = 950
+        self.y = 670
+    
+    def on_left_click(self):
+        global ready
+        ready = True
+
+    def on_update(self, dt):
+        global ready , starter_y
+        if ready:
+            starter_y += 1.5
+            self.y += starter_y
+            if self.y > 2450:
+
+                self.delete()
+
+class starting_bk(Sprite):
+    def on_create(self):
+        self.image = 'bk_first.png'
+        self.layer = 20
+        self.scale = 2.25
+        self.x = 950
+        self.y = 762
+
+    def on_update(self, dt):
+        global ready , starter_y
+        if ready:
+            self.y += starter_y
+            if self.y > 2450:
+                
+                self.delete()
+
+class TT(Sprite):
+    def on_create(self):
+        self.image = 'tt.png'
+        self.layer = 21
+        self.scale = 1.3
+        self.x = 1630
+        self.y = 720
+
+    def on_update(self, dt):
+        global ready , starter_y
+        if ready:
+            self.y += starter_y
+            if self.y > 2450:
+                
+                self.delete()
+
+window.create_sprite(TT)
+window.create_sprite(starting_bk)
+window.create_sprite(play_bt)
 
 class horn(Sprite):
     def on_create(self):
@@ -79,12 +146,13 @@ class door(Sprite):
         self.y = button_y
     
     def door_close_auto(self):
-        global is_door_close,status,go_to_the_next_stop
+        global is_door_close,status,go_to_the_next_stop,go_to_the_next_stop_
         is_door_close = True
         go_to_the_next_stop = True
+        go_to_the_next_stop_= True
 
     def on_left_click(self):
-        global is_door_close,status, go_to_the_next_stop
+        global is_door_close,status, go_to_the_next_stop, go_to_the_next_stop_
         if is_door_close and status =='stop':
             is_door_close = False
             Scheduler.wait(5,self.door_close_auto)
@@ -154,6 +222,7 @@ class station_name_t(Label):
         self.layer=12
         self.font_size = 40
         self.i = 0
+        self.font = ''
 
     def on_update(self, dt):
         global change_stop, station_name
@@ -180,7 +249,7 @@ class TramForDrive(Sprite):
         
 
     def on_update(self, dt):
-        global speed,distance,follow_station,current_lap,lap_lock,status,Station,Station_h,go_to_the_next_stop
+        global speed,distance,follow_station,current_lap,lap_lock,status,Station,Station_h,go_to_the_next_stop,ready
         
         distance -= int(speed)/60
         if distance<=0 and status == 'way':
@@ -434,6 +503,31 @@ class money_text(Label):
         global Money
         self.text= str(Money) + " $"
 
+class infos(Label):
+    def on_create(self):
+        self.position= (875,1250)
+        self.color= Color.ROSE
+        self.text = 'Welcome and please drive your tram to the first sttaion'
+        self.layer=12
+        self.font = 'Highway Gothic Wide'
+        self.font_size = 25
+        self.y= button_y + 25
+        self.x = 1100
+    
+    def idc(self):
+        self.text = ''
+
+    def on_update(self, dt):
+        global info,status,go_to_the_next_stop_
+        if status =='stop':
+            self.text = info[2]
+        if status =='arrive':
+            self.text = info[1]
+        if go_to_the_next_stop_:
+            go_to_the_next_stop_ = False
+            self.text = info[0]
+            Scheduler.wait(5,self.idc)
+
 class tram_from_the_other_side(Sprite):
     def on_create(self):
         self.biu = True
@@ -487,6 +581,7 @@ class _test(Label):
         global status
         self.text="Mode: " + status
 
+window.create_label(infos)
 window.create_label(_test)
 
 window.create_sprite(tram_hitbox)
